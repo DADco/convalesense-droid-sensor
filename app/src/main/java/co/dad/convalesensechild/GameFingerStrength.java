@@ -1,10 +1,12 @@
 package co.dad.convalesensechild;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -19,6 +21,10 @@ public class GameFingerStrength extends GameBase {
         setContentView(R.layout.activity_game_finger_strength);
 
         // UI
+
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        AnimationDrawable frameAnimation = (AnimationDrawable) imageView.getBackground();
+        frameAnimation.start();
 
         TextView textView = (TextView) findViewById(R.id.instruction);
         textView.setText(R.string.instruction_finger_strength);
