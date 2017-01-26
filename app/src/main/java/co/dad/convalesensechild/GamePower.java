@@ -16,9 +16,27 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+class GamePowerResult {
+
+    private long lastScoreTaken;
+
+    public boolean isScoreable() {
+        long dt = System.currentTimeMillis() - lastScoreTaken;
+        return dt > 2000;
+    }
+
+    public void score() {
+        this.lastScoreTaken = System.currentTimeMillis();
+    }
+}
+
 public class GamePower extends GameBase {
 
+    static String TAG = "GamePower";
+
     private Subscription subLinearAcceleration;
+
+    final GamePowerResult result = new GamePowerResult();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +93,9 @@ public class GamePower extends GameBase {
                                     x, y, z, dx, dy, dz);
                             // Log.d("SENSOR", message);
 
-                            if (dx > threshold && dt > punchThreshold) {
-                                Log.d("EVENT", "DETECT");
-                                last.t = t;
+                            if (result.isScoreable() && dx > threshold) {
+                                Log.d(TAG, "score");
+                                result.score();
                             }
 
                             last.x = x;
