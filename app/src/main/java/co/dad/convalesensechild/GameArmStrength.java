@@ -36,7 +36,7 @@ class GameArmStrengthResult {
  */
 public class GameArmStrength extends GameBase {
 
-    static String TAG = "ARMSTRENGTH";
+    static String TAG = "GameArmStrength";
 
     private Subscription subAccelero;
 
