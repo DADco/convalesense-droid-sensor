@@ -23,7 +23,7 @@ class GameArmStrengthResult {
 
     public boolean isScoreable() {
         long dt = System.currentTimeMillis() - lastScoreTaken;
-        return dt > 5000;
+        return dt > 2000;
     }
 
     public void score() {
@@ -133,9 +133,10 @@ public class GameArmStrength extends GameBase {
                             float roll = -(float) Math.toDegrees(LOC[2]);
                             float degs = (float) Math.toDegrees(Math.asin(tmp));
 
-                            Log.d("ARMSTRENGTH", "degs=" + degs);
+                            //Log.d("ARMSTRENGTH", "degs=" + degs);
 
                             if (result.isScoreable() && degs > 50) {
+                                Log.d(TAG, "score");
                                 result.score();
                                 // chatService.send(1);
 
