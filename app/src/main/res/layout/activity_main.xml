@@ -10,8 +10,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="co.dad.convalesensechild.MainActivity">
 
-    <TextView
+    <Button
+        android:text="Arm Strength"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="18dp"
+        android:id="@+id/button_arm_strength" />
+
+    <Button
+        android:text="Finger Strength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_arm_strength"
+        android:layout_alignStart="@+id/button_arm_strength"
+        android:layout_marginTop="20dp"
+        android:id="@+id/button_finger_strength" />
+
+    <Button
+        android:text="Power"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_finger_strength"
+        android:layout_alignStart="@+id/button_finger_strength"
+        android:layout_marginTop="18dp"
+        android:id="@+id/button_power" />
 </RelativeLayout>

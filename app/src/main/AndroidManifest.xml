@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".GameArmStrength" />
+        <activity android:name=".GameFingerStrength" />
+        <activity android:name=".GamePower" />
+        <activity android:name=".GameArmStrength" />
+        <activity android:name=".GameStrength"></activity>
     </application>
 
 </manifest>

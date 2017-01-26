@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">ConvalesenseChild</string>
+    <string name="app_name">Convalesense</string>
+
+    <string name="instruction_arm_strength">
+        Lift the weight to move the clouds for a sunnier day!
+    </string>
+
+    <string name="instruction_finger_strength">
+        Tap as fast as you can using your fingertips to water the plant!
+    </string>
+
+    <string name="instruction_power">
+        Punch to pop all the balloons!
+    </string>
+
 </resources>
