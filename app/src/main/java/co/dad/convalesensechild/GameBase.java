@@ -1,11 +1,18 @@
 package co.dad.convalesensechild;
 
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.UUID;
+
+import co.lujun.lmbluetoothsdk.BluetoothController;
+import co.lujun.lmbluetoothsdk.base.BluetoothListener;
 
 class LastSensorData {
     long t = System.currentTimeMillis();
@@ -20,33 +27,46 @@ class LastSensorData {
  */
 public class GameBase extends AppCompatActivity {
 
-    protected BluetoothMessagingService mChatService;
-
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what) {
-                case Constants.MESSAGE_WRITE:
-                    byte[] writeBuf = (byte[]) msg.obj;
-                    String writeMessage = new String(writeBuf);
-                    Log.d("tag", writeMessage);
-                    break;
-                case Constants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    Log.d("tag", readMessage);
-                    break;
-            }
-        }
-    };
+    private BluetoothController mBTController;
 
     @Override
     protected void onStart() {
         super.onStart();
+        mBTController = BluetoothController.getInstance();
 
-        mChatService = BluetoothMessagingService.getInstance(mHandler);
-        mChatService.start();
+        mBTController.setBluetoothListener(new BluetoothListener() {
+            @Override
+            public void onReadData(BluetoothDevice device, byte[] data) {
+                String readMessage = new String(data);
+                Log.d("tag", readMessage.trim());
+
+            }
+
+            @Override
+            public void onActionStateChanged(int preState, int state) {
+                Log.d("tag", "onActionStateChanged "+state);
+            }
+
+            @Override
+            public void onActionDiscoveryStateChanged(String discoveryState) {
+
+            }
+
+            @Override
+            public void onActionScanModeChanged(int preScanMode, int scanMode) {
+
+            }
+
+            @Override
+            public void onBluetoothServiceStateChanged(int state) {
+                Log.d("tag", "onBluetoothServiceStateChanged "+state);
+            }
+
+            @Override
+            public void onActionDeviceFound(BluetoothDevice device, short rssi) {
+
+            }
+        });
     }
 
     /**
@@ -57,13 +77,10 @@ public class GameBase extends AppCompatActivity {
 
         final String message = "" + score;
 
-        if (mChatService != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mChatService.write(message.getBytes());
-                }
-            }).start();
+        if (mBTController != null &&
+                mBTController.getConnectedDevice() != null) {
+            Log.d("tag", "send data : "+message);
+            mBTController.write(message.getBytes());
         }
     }
 }
