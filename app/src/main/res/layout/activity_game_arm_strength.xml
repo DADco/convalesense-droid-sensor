@@ -14,8 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:src="@drawable/arm"
-        android:id="@+id/imageView" />
+        android:background="@drawable/arm"
+        android:id="@+id/imageView"
+        android:scaleType="center" />
 
     <TextView
         android:text="@string/instruction_arm_strength"

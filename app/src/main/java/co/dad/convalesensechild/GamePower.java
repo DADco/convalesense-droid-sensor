@@ -1,11 +1,13 @@
 package co.dad.convalesensechild;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.pwittchen.reactivesensors.library.ReactiveSensorEvent;
@@ -46,6 +48,10 @@ public class GamePower extends GameBase {
         setContentView(R.layout.activity_game_power);
 
         // UI
+
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        AnimationDrawable frameAnimation = (AnimationDrawable) imageView.getBackground();
+        frameAnimation.start();
 
         TextView textView = (TextView) findViewById(R.id.instruction);
         textView.setText(R.string.instruction_power);

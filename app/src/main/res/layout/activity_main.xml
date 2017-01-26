@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -10,30 +11,58 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="co.dad.convalesensechild.MainActivity">
 
-    <Button
-        android:text="Arm Strength"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:srcCompat="@drawable/waiting"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="18dp"
-        android:id="@+id/button_arm_strength" />
+        android:id="@+id/logo"
+        android:layout_centerHorizontal="true" />
 
-    <Button
-        android:text="Finger Strength"
+    <TextView
+        android:text="@string/instruction_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button_arm_strength"
-        android:layout_alignStart="@+id/button_arm_strength"
-        android:layout_marginTop="20dp"
-        android:id="@+id/button_finger_strength" />
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:id="@+id/instruction"
+        android:textSize="24sp"
+        android:textAlignment="center" />
 
-    <Button
-        android:text="Power"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button_finger_strength"
-        android:layout_alignStart="@+id/button_finger_strength"
-        android:layout_marginTop="18dp"
-        android:id="@+id/button_power" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/instruction"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentEnd="true">
+
+        <Button
+            android:text="Arm Strength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/button_arm_strength" />
+
+        <Button
+            android:text="Finger Strength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button_arm_strength"
+            android:layout_alignStart="@+id/button_arm_strength"
+            android:layout_marginTop="20dp"
+            android:id="@+id/button_finger_strength" />
+
+        <Button
+            android:text="Power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button_finger_strength"
+            android:layout_alignStart="@+id/button_finger_strength"
+            android:layout_marginTop="18dp"
+            android:id="@+id/button_power" />
+
+    </LinearLayout>
 </RelativeLayout>
