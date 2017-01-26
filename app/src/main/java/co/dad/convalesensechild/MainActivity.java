@@ -1,7 +1,6 @@
 package co.dad.convalesensechild;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
@@ -14,6 +13,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static String BT_NAME = "Convalesense Android";
 
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothMessagingService mChatService;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             // Device does not support Bluetooth
         }
 
-        mBluetoothAdapter.setName("Convalesense Android");
+        mBluetoothAdapter.setName(MainActivity.BT_NAME);
 
         Intent discoverableIntent =
                 new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -87,12 +88,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Bluetooth
-
-    private void connectDevice(String deviceHardwareAddress) {
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(deviceHardwareAddress);
-        mBluetoothAdapter.cancelDiscovery();
-        mChatService.connect(device, true);
-    }
 
     private String mConnectedDeviceName;
 
