@@ -1,5 +1,6 @@
 package co.dad.convalesensechild;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -16,6 +17,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 class GameArmStrengthResult {
 
@@ -69,6 +71,11 @@ public class GameArmStrength extends GameBase {
     protected void onResume() {
         super.onResume();
         setupSensors();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     private void setupSensors() {
@@ -138,18 +145,7 @@ public class GameArmStrength extends GameBase {
                             if (result.isScoreable() && degs > 50) {
                                 Log.d(TAG, "score");
                                 result.score();
-                                // chatService.send(1);
-
-                                /*
-                                if (mChatService != null) {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mChatService.write(message.getBytes());
-                                        }
-                                    }).start();
-                                }
-                                */
+                                sendScore(1);
                             }
                         }
                     });

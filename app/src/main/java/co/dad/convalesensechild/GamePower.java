@@ -1,5 +1,6 @@
 package co.dad.convalesensechild;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -15,6 +16,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 class GamePowerResult {
 
@@ -63,6 +65,11 @@ public class GamePower extends GameBase {
         }
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     private void setupSensors() {
         ReactiveSensors sensors = new ReactiveSensors(this);
 
@@ -96,6 +103,7 @@ public class GamePower extends GameBase {
                             if (result.isScoreable() && dx > threshold) {
                                 Log.d(TAG, "score");
                                 result.score();
+                                sendScore(1);
                             }
 
                             last.x = x;

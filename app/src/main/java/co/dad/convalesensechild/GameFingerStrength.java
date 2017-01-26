@@ -1,10 +1,13 @@
 package co.dad.convalesensechild;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class GameFingerStrength extends GameBase {
 
@@ -25,8 +28,14 @@ public class GameFingerStrength extends GameBase {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(TAG, "score");
+                sendScore(1);
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }
