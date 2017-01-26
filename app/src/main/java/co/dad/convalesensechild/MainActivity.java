@@ -32,14 +32,8 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Subscription subGyro;
-    private Subscription subAccelero;
-    private Subscription subStepCounter;
-    private Subscription subStepDetector;
-    private Subscription subLinearAcceleration;
-
     private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothChatService mChatService;
+    private BluetoothMessagingService mChatService;
 
 
     @Override
@@ -83,11 +77,20 @@ public class MainActivity extends AppCompatActivity {
             // Device does not support Bluetooth
         }
 
+        mBluetoothAdapter.setName("Convalesense Android");
+
         Intent discoverableIntent =
                 new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mChatService = BluetoothMessagingService.getInstance(mHandler);
+        mChatService.start();
     }
 
     @Override
@@ -96,11 +99,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        // mChatService = new BluetoothChatService(this, mHandler);
-        // mChatService.start();
+    protected void onPause() {
+        super.onPause();
     }
 
     // Bluetooth
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String mConnectedDeviceName;
+
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -119,14 +120,14 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
-                        case BluetoothChatService.STATE_CONNECTED:
+                        case BluetoothMessagingService.STATE_CONNECTED:
                             Log.d("tag", "try to connect to :" + mConnectedDeviceName);
                             break;
-                        case BluetoothChatService.STATE_CONNECTING:
+                        case BluetoothMessagingService.STATE_CONNECTING:
                             Log.d("tag", "connecting");
                             break;
-                        case BluetoothChatService.STATE_LISTEN:
-                        case BluetoothChatService.STATE_NONE:
+                        case BluetoothMessagingService.STATE_LISTEN:
+                        case BluetoothMessagingService.STATE_NONE:
                             Log.d("tag", "connected");
                             break;
                     }
@@ -136,14 +137,14 @@ public class MainActivity extends AppCompatActivity {
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
                     Log.d("tag", writeMessage);
-                    Toast.makeText(MainActivity.this, writeMessage, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MainActivity.this, writeMessage, Toast.LENGTH_LONG).show();
                     break;
                 case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     Log.d("tag", readMessage);
-                    Toast.makeText(MainActivity.this, readMessage, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MainActivity.this, readMessage, Toast.LENGTH_LONG).show();
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
