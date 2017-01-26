@@ -1,39 +1,20 @@
 package co.dad.convalesensechild;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
-
-import com.github.pwittchen.reactivesensors.library.ReactiveSensorEvent;
-import com.github.pwittchen.reactivesensors.library.ReactiveSensorFilter;
-import com.github.pwittchen.reactivesensors.library.ReactiveSensors;
-
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Subscription subGyro;
-    private Subscription subAccelero;
-    private Subscription subStepCounter;
-    private Subscription subStepDetector;
-    private Subscription subLinearAcceleration;
+    public static String BT_NAME = "Convalesense Android";
 
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothMessagingService mChatService;
@@ -44,23 +25,54 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // UI
+
+        Button btnGame1 = (Button) findViewById(R.id.button_arm_strength);
+        btnGame1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, GameArmStrength.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnGame2 = (Button) findViewById(R.id.button_finger_strength);
+        btnGame2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, GameFingerStrength.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnGame3 = (Button) findViewById(R.id.button_power);
+        btnGame3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, GamePower.class);
+                startActivity(intent);
+            }
+        });
+
+        //  Comms
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             // Device does not support Bluetooth
         }
 
-        mBluetoothAdapter.setName("Convalesense Android");
+        mBluetoothAdapter.setName(MainActivity.BT_NAME);
 
         Intent discoverableIntent =
                 new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
         startActivity(discoverableIntent);
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         mChatService = BluetoothMessagingService.getInstance(mHandler);
         mChatService.start();
     }
@@ -68,163 +80,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setupSensors();
-    }
-
-    private void setupSensors() {
-        ReactiveSensors sensors = new ReactiveSensors(this);
-
-        if (sensors.hasSensor(Sensor.TYPE_GYROSCOPE)) {
-            subGyro = new ReactiveSensors(this).observeSensor(Sensor.TYPE_GYROSCOPE)
-                    .subscribeOn(Schedulers.computation())
-                    .filter(ReactiveSensorFilter.filterSensorChanged())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<ReactiveSensorEvent>() {
-                        @Override public void call(ReactiveSensorEvent reactiveSensorEvent) {
-                            SensorEvent event = reactiveSensorEvent.getSensorEvent();
-
-                            float x = event.values[0];
-                            float y = event.values[1];
-                            float z = event.values[2];
-
-                            String message = String.format("Gyroscope x = %f, y = %f, z = %f", x, y, z);
-                            //Log.d("gyroscope readings", message);
-
-                            /*if (mChatService != null) {
-                                mChatService.write(message.getBytes());
-                            }*/
-
-                        }
-                    });
-        }
-
-        if (sensors.hasSensor(Sensor.TYPE_LINEAR_ACCELERATION)) {
-            subLinearAcceleration = new ReactiveSensors(this).observeSensor(Sensor.TYPE_LINEAR_ACCELERATION)
-                    .subscribeOn(Schedulers.computation())
-                    .filter(ReactiveSensorFilter.filterSensorChanged())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<ReactiveSensorEvent>() {
-                        @Override public void call(ReactiveSensorEvent reactiveSensorEvent) {
-                            SensorEvent event = reactiveSensorEvent.getSensorEvent();
-
-                            float x = event.values[0];
-                            float y = event.values[1];
-                            float z = event.values[2];
-
-                            final String message = String.format("Linear Acceleration x = %f, y = %f, z = %f", x, y, z);
-                            //Log.d("la readings", message);
-
-                            if (mChatService != null) {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mChatService.write(message.getBytes());
-                                    }
-                                }).start();
-
-                            }
-
-                        }
-                    });
-        }
-
-
-        if (sensors.hasSensor(Sensor.TYPE_ACCELEROMETER)) {
-            subAccelero = new ReactiveSensors(this).observeSensor(Sensor.TYPE_ACCELEROMETER)
-                    .subscribeOn(Schedulers.computation())
-                    .filter(ReactiveSensorFilter.filterSensorChanged())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<ReactiveSensorEvent>() {
-                        @Override public void call(ReactiveSensorEvent reactiveSensorEvent) {
-                            SensorEvent event = reactiveSensorEvent.getSensorEvent();
-
-                            float x = event.values[0];
-                            float y = event.values[1];
-                            float z = event.values[2];
-
-                            String message = String.format("Accelerometer x = %f, y = %f, z = %f", x, y, z);
-                            //Log.d("gyroscope readings", message);
-                            /*if (mChatService != null) {
-                                mChatService.write(message.getBytes());
-                            }*/
-
-                        }
-                    });
-        }
-
-
-        if (sensors.hasSensor(Sensor.TYPE_STEP_COUNTER)) {
-            subStepCounter = new ReactiveSensors(this).observeSensor(Sensor.TYPE_STEP_COUNTER)
-                    .subscribeOn(Schedulers.computation())
-                    .filter(ReactiveSensorFilter.filterSensorChanged())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<ReactiveSensorEvent>() {
-                        @Override public void call(ReactiveSensorEvent reactiveSensorEvent) {
-                            SensorEvent event = reactiveSensorEvent.getSensorEvent();
-
-                            float x = event.values[0];
-                            float y = event.values[1];
-                            float z = event.values[2];
-
-                            String message = String.format("step counter x = %f, y = %f, z = %f", x, y, z);
-                            //Log.d("gyroscope readings", message);
-                            /*if (mChatService != null) {
-                                mChatService.write(message.getBytes());
-                            }*/
-
-                        }
-                    });
-
-        }
-
-        if (sensors.hasSensor(Sensor.TYPE_STEP_DETECTOR)) {
-            subStepDetector = new ReactiveSensors(this).observeSensor(Sensor.TYPE_STEP_DETECTOR)
-                    .subscribeOn(Schedulers.computation())
-                    .filter(ReactiveSensorFilter.filterSensorChanged())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<ReactiveSensorEvent>() {
-                        @Override public void call(ReactiveSensorEvent reactiveSensorEvent) {
-                            SensorEvent event = reactiveSensorEvent.getSensorEvent();
-
-                            float x = event.values[0];
-                            float y = event.values[1];
-                            float z = event.values[2];
-
-                            String message = String.format("step detector x = %f, y = %f, z = %f", x, y, z);
-                            //Log.d("gyroscope readings", message);
-                            /*if (mChatService != null) {
-                                mChatService.write(message.getBytes());
-                            }*/
-
-                        }
-                    });
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        if (subAccelero != null) {
-            subAccelero.unsubscribe();
-        }
-
-        if (subGyro != null) {
-            subGyro.unsubscribe();
-        }
-
-        if (subStepCounter != null) {
-            subStepCounter.unsubscribe();
-        }
-
-        if (subStepDetector != null) {
-            subStepDetector.unsubscribe();
-        }
-
-        if (subLinearAcceleration != null) {
-            subLinearAcceleration.unsubscribe();
-        }
     }
+
+    // Bluetooth
 
     private String mConnectedDeviceName;
 
