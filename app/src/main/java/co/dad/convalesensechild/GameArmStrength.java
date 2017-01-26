@@ -138,6 +138,17 @@ public class GameArmStrength extends GameBase {
                             if (result.isScoreable() && degs > 50) {
                                 result.score();
                                 // chatService.send(1);
+
+                                /*
+                                if (mChatService != null) {
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mChatService.write(message.getBytes());
+                                        }
+                                    }).start();
+                                }
+                                */
                             }
                         }
                     });
