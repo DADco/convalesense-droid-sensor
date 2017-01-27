@@ -3,6 +3,7 @@ package co.dad.convalesensechild;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 import co.lujun.lmbluetoothsdk.BluetoothController;
 import co.lujun.lmbluetoothsdk.base.BluetoothListener;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,13 +31,15 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothController mBTController;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BluetoothAdapter.getDefaultAdapter().setName(BT_NAME);
-
-        //initBluetooth();
-
     }
 
     private void initBluetooth() {

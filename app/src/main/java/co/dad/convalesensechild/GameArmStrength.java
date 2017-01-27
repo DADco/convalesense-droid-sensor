@@ -86,11 +86,6 @@ public class GameArmStrength extends GameBase {
         setupSensors();
     }
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
     private void setupSensors() {
         ReactiveSensors sensors = new ReactiveSensors(this);
 

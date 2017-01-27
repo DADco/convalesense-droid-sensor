@@ -1,6 +1,7 @@
 package co.dad.convalesensechild;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import co.lujun.lmbluetoothsdk.BluetoothController;
 import co.lujun.lmbluetoothsdk.base.BluetoothListener;
 import co.lujun.lmbluetoothsdk.base.State;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 class LastSensorData {
     long t = System.currentTimeMillis();
@@ -29,6 +31,11 @@ class LastSensorData {
 public abstract class GameBase extends AppCompatActivity {
 
     private BluetoothController mBTController;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onStart() {
