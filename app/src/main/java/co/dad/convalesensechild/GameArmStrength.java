@@ -23,15 +23,21 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 class GameArmStrengthResult {
 
-    private long lastScoreTaken;
+    private long lastScoreTaken = System.currentTimeMillis();
+    private boolean wasHorizontal = false;
 
     public boolean isScoreable() {
         long dt = System.currentTimeMillis() - lastScoreTaken;
-        return dt > 2000;
+        return dt > 2000 && wasHorizontal;
     }
 
     public void score() {
         this.lastScoreTaken = System.currentTimeMillis();
+        wasHorizontal = false;
+    }
+
+    public void setWasHorizontal(boolean wasHorizontal) {
+        this.wasHorizontal = wasHorizontal;
     }
 }
 
@@ -103,6 +109,7 @@ public class GameArmStrength extends GameBase {
                     .subscribe(new Action1<ReactiveSensorEvent>() {
                         @Override
                         public void call(ReactiveSensorEvent reactiveSensorEvent) {
+
                             SensorEvent event = reactiveSensorEvent.getSensorEvent();
 
                             int displayOrientation = getWindowManager().getDefaultDisplay().getRotation();
@@ -151,14 +158,22 @@ public class GameArmStrength extends GameBase {
                             // LOC[0] compass
                             float pitch = (float) Math.toDegrees(LOC[1]);
                             float roll = -(float) Math.toDegrees(LOC[2]);
-                            float degs = (float) Math.toDegrees(Math.asin(tmp));
+                            float degs = (float) Math.abs(Math.toDegrees(Math.asin(tmp)));
 
                             //Log.d("ARMSTRENGTH", "degs=" + degs);
 
-                            if (result.isScoreable() && degs > 50) {
-                                Log.d(TAG, "score");
-                                result.score();
-                                sendScore(1);
+                            // At 0 the arm has been bent up veritcally
+                            if (result.isScoreable() && degs < 10) {
+                                synchronized (result) {
+                                    Log.d(TAG, "score");
+                                    result.score();
+                                    sendScore(1);
+                                }
+                            }
+
+                            // At 50 degrees set horizontal flag - a rep has been done
+                            if (degs > 50) {
+                                result.setWasHorizontal(true);
                             }
                         }
                     });
