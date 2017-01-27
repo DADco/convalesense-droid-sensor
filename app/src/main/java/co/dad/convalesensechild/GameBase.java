@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import co.lujun.lmbluetoothsdk.BluetoothController;
 import co.lujun.lmbluetoothsdk.base.BluetoothListener;
+import co.lujun.lmbluetoothsdk.base.State;
 
 class LastSensorData {
     long t = System.currentTimeMillis();
@@ -25,7 +26,7 @@ class LastSensorData {
  * Game base class.
  * Created by alli on 26/01/2017.
  */
-public class GameBase extends AppCompatActivity {
+public abstract class GameBase extends AppCompatActivity {
 
     private BluetoothController mBTController;
 
@@ -60,6 +61,11 @@ public class GameBase extends AppCompatActivity {
             @Override
             public void onBluetoothServiceStateChanged(int state) {
                 Log.d("tag", "onBluetoothServiceStateChanged "+state);
+                if (state == State.STATE_DISCONNECTED) {
+                    mBTController.release();
+                    stopSensors();
+                    finish();
+                }
             }
 
             @Override
@@ -83,4 +89,6 @@ public class GameBase extends AppCompatActivity {
             mBTController.write(message.getBytes());
         }
     }
+
+    public abstract void stopSensors();
 }

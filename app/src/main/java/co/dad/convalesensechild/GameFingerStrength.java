@@ -44,4 +44,9 @@ public class GameFingerStrength extends GameBase {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+    @Override
+    public void stopSensors() {
+
+    }
 }

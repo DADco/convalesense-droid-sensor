@@ -120,4 +120,11 @@ public class GamePower extends GameBase {
 
         }
     }
+
+    @Override
+    public void stopSensors() {
+        if (subLinearAcceleration != null) {
+            subLinearAcceleration.unsubscribe();
+        }
+    }
 }

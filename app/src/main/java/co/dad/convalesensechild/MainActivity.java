@@ -32,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         BluetoothAdapter.getDefaultAdapter().setName(BT_NAME);
 
+        //initBluetooth();
+
+    }
+
+    private void initBluetooth() {
         mBTController = BluetoothController.getInstance().build(this);
-        mBTController.setDiscoverable(300);
         mBTController.setBluetoothListener(new BluetoothListener() {
             @Override
             public void onReadData(BluetoothDevice device, byte[] data) {
@@ -88,40 +90,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mBTController.startAsServer();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        int fineLocPerm = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int fineCoarsePerm = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        if (fineCoarsePerm != PackageManager.PERMISSION_GRANTED
-                || fineLocPerm != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION
-                    , Manifest.permission.ACCESS_COARSE_LOCATION}, 123);
-
-        } else {
-            mBTController.startAsServer();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == 123
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-            mBTController.startAsServer();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        initBluetooth();
     }
 
     @Override

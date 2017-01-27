@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/waiting"
-        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
         android:id="@+id/logo"
         android:layout_centerHorizontal="true" />
 
@@ -30,39 +30,4 @@
         android:textSize="24sp"
         android:textAlignment="center" />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/instruction"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentEnd="true">
-
-        <Button
-            android:text="Arm Strength"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/button_arm_strength" />
-
-        <Button
-            android:text="Finger Strength"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button_arm_strength"
-            android:layout_alignStart="@+id/button_arm_strength"
-            android:layout_marginTop="20dp"
-            android:id="@+id/button_finger_strength" />
-
-        <Button
-            android:text="Power"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button_finger_strength"
-            android:layout_alignStart="@+id/button_finger_strength"
-            android:layout_marginTop="18dp"
-            android:id="@+id/button_power" />
-
-    </LinearLayout>
 </RelativeLayout>

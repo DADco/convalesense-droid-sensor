@@ -61,7 +61,7 @@ public class GameArmStrength extends GameBase {
         // UI
 
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        AnimationDrawable frameAnimation = (AnimationDrawable) imageView.getBackground();
+        AnimationDrawable frameAnimation = (AnimationDrawable) imageView.getDrawable();
         frameAnimation.start();
 
         TextView textView = (TextView) findViewById(R.id.instruction);
@@ -71,6 +71,13 @@ public class GameArmStrength extends GameBase {
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void stopSensors() {
+        if (subAccelero != null) {
+            subAccelero.unsubscribe();
+        }
     }
 
     @Override
