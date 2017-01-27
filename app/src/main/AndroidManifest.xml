@@ -21,11 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameArmStrength" />
-        <activity android:name=".GameFingerStrength" />
-        <activity android:name=".GamePower" />
-        <activity android:name=".GameArmStrength" />
-        <activity android:name=".GameStrength"></activity>
+        <activity android:name=".GameArmStrength"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".GameFingerStrength"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".GamePower"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
